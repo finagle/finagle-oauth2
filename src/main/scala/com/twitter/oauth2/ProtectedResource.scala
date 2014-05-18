@@ -1,25 +1,33 @@
 package com.twitter.oauth2
 
+import com.twitter.util.Future
+
 trait ProtectedResource {
 
   val fetchers = Seq(AuthHeader, RequestParameter)
 
-  def handleRequest[U](request: ProtectedResourceRequest, dataHandler: DataHandler[U]): Either[OAuthError, AuthInfo[U]] = try {
-    fetchers.find { fetcher =>
-      fetcher.matches(request)
-    }.map { fetcher =>
-      val result = fetcher.fetch(request)
-      val accessToken = dataHandler.findAccessToken(result.token).getOrElse(throw new InvalidToken("Invalid access token"))
-      if (dataHandler.isAccessTokenExpired(accessToken)) {
-        throw new ExpiredToken()
-      }
+  def handleRequest[U](request: ProtectedResourceRequest, dataHandler: DataHandler[U]): Future[AuthInfo[U]] = for {
+    fetcher <- fetchers.find { f =>
+      f.matches(request)
+    } match {
+      case Some(f) => Future.value(f)
+      case None => Future.exception(new InvalidRequest("Access token was not specified"))
+    }
+    tokenOption <- dataHandler.findAccessToken(fetcher.fetch(request).token)
+    token <- tokenOption match {
+      case Some(t) =>
+        if (dataHandler.isAccessTokenExpired(t)) Future.exception(new ExpiredToken())
+        else Future.value(t)
+      case None => Future.exception(new InvalidToken("Invalid access token"))
+    }
+    infoOption <- dataHandler.findAuthInfoByAccessToken(token)
+    info <- infoOption match {
+      case Some(i) => Future.value(i)
+      case None => Future.exception(new InvalidToken("invalid access token"))
+    }
+  } yield info
 
-      dataHandler.findAuthInfoByAccessToken(accessToken).map { Right(_) }.getOrElse(Left(new InvalidToken("invalid access token")))
-    }.getOrElse(throw new InvalidRequest("Access token was not specified"))
-  } catch {
-    case e: OAuthError => Left(e)
-  }
-
+  def mkFilter = ???
 }
 
 object ProtectedResource extends ProtectedResource
