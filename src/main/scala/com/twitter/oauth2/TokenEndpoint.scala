@@ -1,6 +1,9 @@
 package com.twitter.oauth2
 
-import com.twitter.util.Future
+import com.twitter.util.{Throw, Return, Future}
+import com.twitter.finagle.Service
+import com.twitter.finagle.http.{Status, Version, Response, Request}
+import scala.util.parsing.json.JSONObject
 
 class TokenEndpoint {
 
@@ -31,8 +34,6 @@ class TokenEndpoint {
       if (validated) handler.handleRequest(request, dataHandler)
       else Future.exception(new InvalidClient)
   } yield result
-
-  def mkService = ???
 }
 
 object TokenEndpoint extends TokenEndpoint
