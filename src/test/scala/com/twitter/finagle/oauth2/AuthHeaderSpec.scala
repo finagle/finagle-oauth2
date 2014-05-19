@@ -1,5 +1,8 @@
 package com.twitter.finagle.oauth2
 
+import org.scalatest._
+import org.scalatest.Matchers._
+
 class AuthHeaderSpec extends FlatSpec {
 
   def createRequest(authorization: Option[String]): ProtectedResourceRequest = authorization match {

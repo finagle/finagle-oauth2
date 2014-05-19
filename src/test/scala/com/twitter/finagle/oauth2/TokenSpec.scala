@@ -2,17 +2,19 @@ package com.twitter.finagle.oauth2
 
 import org.scalatest._
 import org.scalatest.Matchers._
+import com.twitter.util.{Await, Future}
 
 class TokenSpec extends FlatSpec {
 
   def successfulDataHandler() = new MockDataHandler() {
+    override def validateClient(clientId: String, clientSecret: String, grantType: String): Future[Boolean] =
+      Future.value(true)
 
-    override def validateClient(clientId: String, clientSecret: String, grantType: String): Boolean = true
+    override def findUser(username: String, password: String): Future[Option[MockUser]] =
+      Future.value(Some(MockUser(10000, "username")))
 
-    override def findUser(username: String, password: String): Option[MockUser] = Some(MockUser(10000, "username"))
-
-    override def createAccessToken(authInfo: AuthInfo[MockUser]): AccessToken = AccessToken("token1", None, Some("all"), Some(3600), new java.util.Date())
-
+    override def createAccessToken(authInfo: AuthInfo[MockUser]): Future[AccessToken] =
+      Future.value(AccessToken("token1", None, Some("all"), Some(3600), new java.util.Date()))
   }
 
   it should "be handled request" in {
@@ -22,7 +24,7 @@ class TokenSpec extends FlatSpec {
     )
 
     val dataHandler = successfulDataHandler()
-    TokenEndpoint.handleRequest(request, dataHandler) should be ('right)
+    Await.result(TokenEndpoint.handleRequest(request, dataHandler)) should not be (null)
   }
 
   it should "be error if grant type doesn't exist" in {
@@ -33,10 +35,7 @@ class TokenSpec extends FlatSpec {
 
     val dataHandler = successfulDataHandler()
     intercept[InvalidRequest] {
-      TokenEndpoint.handleRequest(request, dataHandler) match {
-        case Left(e) => throw e
-        case _ =>
-      }
+      Await.result(TokenEndpoint.handleRequest(request, dataHandler))
     }
   }
 
@@ -48,10 +47,7 @@ class TokenSpec extends FlatSpec {
 
     val dataHandler = successfulDataHandler()
     intercept[UnsupportedGrantType] {
-      TokenEndpoint.handleRequest(request, dataHandler) match {
-        case Left(e) => throw e
-        case _ =>
-      }
+      Await.result(TokenEndpoint.handleRequest(request, dataHandler))
     }
   }
 
@@ -63,10 +59,7 @@ class TokenSpec extends FlatSpec {
 
     val dataHandler = successfulDataHandler()
     intercept[InvalidRequest] {
-      TokenEndpoint.handleRequest(request, dataHandler) match {
-        case Left(e) => throw e
-        case _ =>
-      }
+      Await.result(TokenEndpoint.handleRequest(request, dataHandler))
     }
   }
 
@@ -77,16 +70,12 @@ class TokenSpec extends FlatSpec {
     )
 
     val dataHandler = new MockDataHandler() {
-
-      override def validateClient(clientId: String, clientSecret: String, grantType: String): Boolean = false
-
+      override def validateClient(clientId: String, clientSecret: String, grantType: String): Future[Boolean] =
+        Future.value(false)
     }
 
     intercept[InvalidClient] {
-      TokenEndpoint.handleRequest(request, dataHandler) match {
-        case Left(e) => throw e
-        case _ =>
-      }
+      Await.result(TokenEndpoint.handleRequest(request, dataHandler))
     }
   }
 }

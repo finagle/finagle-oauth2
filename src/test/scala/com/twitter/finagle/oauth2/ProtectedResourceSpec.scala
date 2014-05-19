@@ -3,17 +3,16 @@ package com.twitter.finagle.oauth2
 import org.scalatest._
 import org.scalatest.Matchers._
 import java.util.Date
+import com.twitter.util.{Await, Future}
 
 class ProtectedResourceSpec extends FlatSpec {
 
   def successfulDataHandler() = new MockDataHandler() {
+    override def findAccessToken(token: String): Future[Option[AccessToken]] =
+      Future.value(Some(AccessToken("token1", Some("refreshToken1"), Some("all"), Some(3600), new Date())))
 
-    override def findAccessToken(token: String): Option[AccessToken] = Some(AccessToken("token1", Some("refreshToken1"), Some("all"), Some(3600), new Date()))
-
-    override def findAuthInfoByAccessToken(accessToken: AccessToken): Option[AuthInfo[MockUser]] = Some(
-      AuthInfo(user = MockUser(10000, "username"), clientId = "clientId1", scope = Some("all"), redirectUri = None)
-    )
-
+    override def findAuthInfoByAccessToken(accessToken: AccessToken): Future[Option[AuthInfo[MockUser]]] =
+      Future.value(Some(AuthInfo(user = MockUser(10000, "username"), clientId = "clientId1", scope = Some("all"), redirectUri = None)))
   }
 
   it should "be handled request with token into header" in {
@@ -23,7 +22,7 @@ class ProtectedResourceSpec extends FlatSpec {
     )
 
     val dataHandler = successfulDataHandler()
-    ProtectedResource.handleRequest(request, dataHandler) should be ('right)
+    Await.result(ProtectedResource.handleRequest(request, dataHandler)) should not be (null)
   }
 
   it should "be handled request with token into body" in {
@@ -33,7 +32,7 @@ class ProtectedResourceSpec extends FlatSpec {
     )
 
     val dataHandler = successfulDataHandler()
-    ProtectedResource.handleRequest(request, dataHandler) should be ('right)
+    Await.result(ProtectedResource.handleRequest(request, dataHandler)) should not be (null)
   }
 
   it should "be lost expired" in {
@@ -43,20 +42,16 @@ class ProtectedResourceSpec extends FlatSpec {
     )
 
     val dataHandler = new MockDataHandler() {
+      override def findAccessToken(token: String): Future[Option[AccessToken]] =
+        Future.value(Some(AccessToken("token1", Some("refreshToken1"), Some("all"), Some(3600), new Date(new Date().getTime() - 4000 * 1000))))
 
-      override def findAccessToken(token: String): Option[AccessToken] = Some(AccessToken("token1", Some("refreshToken1"), Some("all"), Some(3600), new Date(new Date().getTime() - 4000 * 1000)))
-
-      override def findAuthInfoByAccessToken(accessToken: AccessToken): Option[AuthInfo[MockUser]] = Some(
-        AuthInfo(user = MockUser(10000, "username"), clientId = "clientId1", scope = Some("all"), redirectUri = None)
-      )
+      override def findAuthInfoByAccessToken(accessToken: AccessToken): Future[Option[AuthInfo[MockUser]]] =
+        Future.value(Some(AuthInfo(user = MockUser(10000, "username"), clientId = "clientId1", scope = Some("all"), redirectUri = None)))
 
     }
 
     intercept[ExpiredToken] {
-      ProtectedResource.handleRequest(request, dataHandler) match {
-        case Left(e) => throw e
-        case _ =>
-      }
+      Await.result(ProtectedResource.handleRequest(request, dataHandler))
     }
   }
 
@@ -68,10 +63,7 @@ class ProtectedResourceSpec extends FlatSpec {
 
     val dataHandler = successfulDataHandler()
     intercept[InvalidRequest] {
-      ProtectedResource.handleRequest(request, dataHandler) match {
-        case Left(e) => throw e
-        case _ =>
-      }
+      Await.result(ProtectedResource.handleRequest(request, dataHandler))
     }
   }
 }
