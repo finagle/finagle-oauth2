@@ -8,7 +8,8 @@ trait OAuth2 {
     val bearer = Seq("error=\"" + e.errorType + "\"") ++ (
       if (!e.description.isEmpty) Seq("error_description=\"" + e.description + "\"")
       else Nil
-      ).mkString(", ")
+    ).mkString(", ")
+
     val reply = Response()
     reply.setProtocolVersion(Version.Http11)
     reply.setStatusCode(e.statusCode)

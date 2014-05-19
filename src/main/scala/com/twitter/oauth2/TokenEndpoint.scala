@@ -1,9 +1,6 @@
 package com.twitter.oauth2
 
-import com.twitter.util.{Throw, Return, Future}
-import com.twitter.finagle.Service
-import com.twitter.finagle.http.{Status, Version, Response, Request}
-import scala.util.parsing.json.JSONObject
+import com.twitter.util.Future
 
 class TokenEndpoint {
 
