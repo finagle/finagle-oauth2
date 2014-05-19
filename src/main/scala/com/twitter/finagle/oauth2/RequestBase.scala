@@ -1,4 +1,4 @@
-package com.twitter.oauth2
+package com.twitter.finagle.oauth2
 
 import collection.immutable.TreeMap
 import math.Ordering

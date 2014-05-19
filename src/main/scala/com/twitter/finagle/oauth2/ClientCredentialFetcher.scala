@@ -1,4 +1,4 @@
-package com.twitter.oauth2
+package com.twitter.finagle.oauth2
 
 import org.apache.commons.codec.binary.Base64
 

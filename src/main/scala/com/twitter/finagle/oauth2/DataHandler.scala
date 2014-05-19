@@ -1,4 +1,4 @@
-package com.twitter.oauth2
+package com.twitter.finagle.oauth2
 
 import java.util.Date
 import com.twitter.util.Future

@@ -1,4 +1,4 @@
-package com.twitter.oauth2
+package com.twitter.finagle.oauth2
 
 abstract class OAuthError(val statusCode: Int, val description: String) extends Exception {
 

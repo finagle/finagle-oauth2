@@ -1,4 +1,4 @@
-package com.twitter.oauth2
+package com.twitter.finagle.oauth2
 
 case class AuthorizationRequest(headers: Map[String, Seq[String]], params: Map[String, Seq[String]]) extends RequestBase(headers, params) {
 

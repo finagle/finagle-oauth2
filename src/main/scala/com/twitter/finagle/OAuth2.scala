@@ -1,6 +1,8 @@
-package com.twitter.oauth2
+package com.twitter.finagle
 
 import com.twitter.finagle.http._
+import com.twitter.finagle.oauth2._
+import com.twitter.finagle.oauth2.AuthorizationRequest
 
 trait OAuth2 {
 
