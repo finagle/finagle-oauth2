@@ -5,7 +5,8 @@ object FinaleOAuth2 extends Build {
 
   val baseSettings = Defaults.defaultSettings ++ Seq(
     libraryDependencies ++= Seq(
-      "com.twitter" %% "finagle-http" % "6.14.0"
+      "com.twitter" %% "finagle-http" % "6.14.0",
+      "org.scalatest" %% "scalatest" % "2.0" % "test"
     )
   )
 

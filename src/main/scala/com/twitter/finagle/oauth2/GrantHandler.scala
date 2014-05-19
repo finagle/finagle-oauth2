@@ -122,7 +122,7 @@ class AuthorizationCode(clientCredentialFetcher: ClientCredentialFetcher) extend
       info <- infoOption match {
         case Some(i) =>
           if (i.clientId != credential.clientId) Future.exception(new InvalidClient())
-          else if (i.redirectUri.isDefined && i.redirectUri != redirectUri) Future.exception(throw new RedirectUriMismatch())
+          else if (i.redirectUri.isDefined && i.redirectUri != redirectUri) Future.exception(new RedirectUriMismatch())
           else Future.value(i)
         case None => Future.exception(new InvalidGrant())
       }

@@ -29,7 +29,7 @@ class TokenEndpoint {
     validated <- dataHandler.validateClient(credential.clientId, credential.clientSecret, grantType)
     result <-
       if (validated) handler.handleRequest(request, dataHandler)
-      else Future.exception(new InvalidClient)
+      else Future.exception(new InvalidClient())
   } yield result
 }
 

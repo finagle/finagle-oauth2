@@ -26,8 +26,6 @@ trait ProtectedResource {
       case None => Future.exception(new InvalidToken("invalid access token"))
     }
   } yield info
-
-  def mkFilter = ???
 }
 
 object ProtectedResource extends ProtectedResource
