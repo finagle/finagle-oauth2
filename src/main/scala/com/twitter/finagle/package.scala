@@ -8,11 +8,11 @@ package object finagle {
   trait OAuth2 {
 
     private[this] def headersToMap(headers: HeaderMap) = (for {
-      key <- headers.values
+      key <- headers.keys
     } yield (key, headers.getAll(key).toSeq)).toMap
 
     private[this] def paramsToMap(params: ParamMap) = (for {
-      key <- params.values
+      key <- params.keys
     } yield (key, params.getAll(key).toSeq)).toMap
 
     def issueAccessToken[U](request: Request, dataHandler: DataHandler[U]) =
