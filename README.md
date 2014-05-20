@@ -1,7 +1,30 @@
 OAuth2 Provider for Finagle
 ---------------------------------------
 
-How to use?
+This is a [finagled](https://github.com/twitter/finagle) **OAuth2** _server-side_ provider based on the source code from a [scala-oauth2-provider](https://github.com/nulab/scala-oauth2-provider) library. Since [scala-oauth2-provider](https://github.com/nulab/scala-oauth2-provider) it involves 
+
+ - an asynchronus version of a `DataHandler` interface
+ - an asynchronus version of both `TokenEndpoint` and `ProtectedResource` handlers
+ - an asyncrhonus version of tests
+ - three new finagled entities: `OAuth2`, `OAuth2Request`, `OAuth2Filter`
+
+This makes the usage of this library very sleek from a finagled environment.
+
+```scala
+resolvers += "Finagle-OAuth2" at "http://repo.konfettin.ru"
+
+libraryDependencies ++= Seq(
+  "com.twitter" %% "oauth2" % "0.1.0"
+)
+```
+
+Brief _usage instrcution_ involves
+
+ - defining an implementation of a `DataHandler` interface
+ - defining a service that emmits access tokens
+ - defining a protected service using either
+  - simple http service with `OAuth2` trait mixed or
+  - type-safe service `Service[OAuth2Request[U], Response]` and `OAuth2Filter` applied
 
 #### Define a DataHandler implementation
 ```scala
