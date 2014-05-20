@@ -4,7 +4,6 @@ OAuth2 Provider for Finagle
 How to use?
 
 #### Define a DataHandler implementation
-
 ```scala
 // This DatatHandler is used for Client Credentials Flow Scheme,
 // so we don't need to implement all of these methods.
@@ -27,15 +26,7 @@ object LocalDataHandler extends DataHandler[Long] {
     2l -> ("John", "password")
   )
 
-  /**
-   * Issues a new ''l''-length token.
-   */
-  def issueToken(l: Int) = Random.alphanumeric.take(l).mkString
-
-  /**
-   * Issues a current date.
-   */
-  def issueDate = new java.util.Date()
+  // Client Credentials Flow Scheme Implementation goes here
 
   def validateClient(clientId: String, clientSecret: String, grantType: String) =
     Future.value(true)
@@ -51,7 +42,8 @@ object LocalDataHandler extends DataHandler[Long] {
   }
 
   def createAccessToken(authInfo: AuthInfo[Long]) = {
-    val token = AccessToken(issueToken(20), None, Some("all"), Some(3600), issueDate)
+    val token = AccessToken(Random.alphanumeric.take(20).mkString, 
+                            None, Some("all"), Some(3600), new java.util.Date())
     forwardStorage += (authInfo.user -> token)
     backwardStorage += (token.token -> authInfo)
 
