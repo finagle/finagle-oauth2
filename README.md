@@ -21,7 +21,7 @@ This makes the usage of this library very sleek from a finagled environment. The
 resolvers += "Finagle-OAuth2" at "http://repo.konfettin.ru"
 
 libraryDependencies ++= Seq(
-  "com.twitter" %% "oauth2" % "0.1.0"
+  "com.twitter" %% "finagle-oauth2" % "0.1.0"
 )
 ```
 
