@@ -9,11 +9,9 @@ How to use?
 // so we don't need to implement all of these methods.
 // ''Long'' is our user (his ID)
 object LocalDataHandler extends DataHandler[Long] {
-
   /**
-   * We map 
-   *  (a) users (ther IDs) aloong with granted tokens
-   *  (b) tokens along with auth information
+   *  We map (a) users (ther IDs) aloong with granted tokens
+   *         (b) tokens along with auth information
    */
   val forwardStorage = collection.mutable.Map[Long, AccessToken]()
   val backwardStorage = collection.mutable.Map[String, AuthInfo[Long]]()
@@ -21,13 +19,9 @@ object LocalDataHandler extends DataHandler[Long] {
   /**
    * Emulates the database.
    */
-  val db = Map(
-    1l -> ("Ivan", "12345"),
-    2l -> ("John", "password")
-  )
+  val db = Map(1l -> ("Ivan", "12345"), 2l -> ("John", "password"))
 
   // Client Credentials Flow Scheme Implementation goes here
-
   def validateClient(clientId: String, clientSecret: String, grantType: String) =
     Future.value(true)
 
