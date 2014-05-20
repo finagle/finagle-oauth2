@@ -2,6 +2,7 @@ package com.twitter
 
 import com.twitter.finagle.http._
 import com.twitter.finagle.oauth2._
+import com.twitter.util.Future
 
 package object finagle {
 
@@ -28,5 +29,18 @@ package object finagle {
       )
   }
 
-  
+  case class OAuth2Request[U](authInfo: AuthInfo[U], underlying: Request) extends RequestProxy {
+    def request: Request = underlying
+  }
+
+  class OAuth2Filter[U](dataHandler: DataHandler[U])
+    extends Filter[Request, Response, OAuth2Request[U], Response] with OAuth2 {
+
+    def apply(req: Request, service: Service[OAuth2Request[U], Response]) =
+      authorize(req, dataHandler) flatMap { authInfo =>
+        service(OAuth2Request(authInfo, req))
+      } handle {
+        case e: OAuthError => e.toHttpResponse
+      }
+  }
 }
