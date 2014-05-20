@@ -2,6 +2,7 @@ package com.twitter
 
 import com.twitter.finagle.http._
 import com.twitter.finagle.oauth2._
+import com.twitter.util.Future
 
 package object finagle {
 
