@@ -98,7 +98,6 @@ object ProtectedService extends Service[Request, Response] with OAuth2 {
       case e: OAuthError => e.toHttpResponse
     }
 }
-
 ```
 
 #### Test services
@@ -129,5 +128,36 @@ HTTP/1.1 200 OK
 Content-Length: 7
 
 Hello 1
+```
+
+#### A type-safe OAuth2 Filter & Request
+```scala
+import com.twitter.finagle.oauth2._
+import com.twitter.finagle.{OAuth2Request, OAuth2Filter}
+
+object TypeSafeProtectedService extends Service[OAuth2Request[Long], Response] {
+  def apply(req: OAuth2Request[Long]) = {
+    val rep = Response(Version.Http11, Status.Ok)
+    rep.setContentString(s"Hello ${req.authInfo.user}")
+
+    Future.value(rep)
+  }
+}
+
+object Main extends App {
+
+  val auth = new OAuth2Filter(LocalDataHandler)
+
+  val backend = RoutingService.byPathObject {
+    case Root / "authorize" => TokenService
+    case Root / "hello" => auth andThen TypeSafeProtectedService
+  }
+
+  ServerBuilder()
+    .codec(RichHttp[Request](Http()))
+    .bindTo(new InetSocketAddress(8080))
+    .name("backend")
+    .build(backend)
+}
 ```
 
