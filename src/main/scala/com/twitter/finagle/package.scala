@@ -28,5 +28,18 @@ package object finagle {
       )
   }
 
-  
+  case class OAuth2Request[U](authInfo: AuthInfo[U], underlying: Request) extends RequestProxy {
+    def request: Request = underlying
+  }
+
+  class OAuth2Filter[U](dataHandler: DataHandler[U])
+    extends Filter[Request, Response, OAuth2Request[U], Response] with OAuth2 {
+
+    def apply(req: Request, service: Service[OAuth2Request[U], Response]) =
+      authorize(req, dataHandler) flatMap { authInfo =>
+        service(OAuth2Request(authInfo, req))
+      } handle {
+        case e: OAuthError => e.toHttpResponse
+      }
+  }
 }
