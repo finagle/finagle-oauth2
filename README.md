@@ -8,8 +8,15 @@ This is a [finagled](https://github.com/twitter/finagle) **OAuth2** _server-side
  - an asyncrhonus version of tests
  - three new finagled entities: `OAuth2`, `OAuth2Request`, `OAuth2Filter`
 
-This makes the usage of this library very sleek from a finagled environment.
+This makes the usage of this library very sleek from a finagled environment. The brief usage instruction looks as follows:
 
+ - define an implementation of a `DataHandler` interface
+ - define a service that emmits access tokens
+ - define a protected service using either
+  - simple http service with `OAuth2` trait mixed or
+  - type-safe service `Service[OAuth2Request[U], Response]` and `OAuth2Filter` applied
+
+#### SBT dependency
 ```scala
 resolvers += "Finagle-OAuth2" at "http://repo.konfettin.ru"
 
@@ -17,14 +24,6 @@ libraryDependencies ++= Seq(
   "com.twitter" %% "oauth2" % "0.1.0"
 )
 ```
-
-Brief _usage instrcution_ involves
-
- - defining an implementation of a `DataHandler` interface
- - defining a service that emmits access tokens
- - defining a protected service using either
-  - simple http service with `OAuth2` trait mixed or
-  - type-safe service `Service[OAuth2Request[U], Response]` and `OAuth2Filter` applied
 
 #### Define a DataHandler implementation
 ```scala
