@@ -3,15 +3,15 @@ OAuth2 Provider for Finagle
 
 This is a [finagled](https://github.com/twitter/finagle) **OAuth2** _server-side_ provider based on the source code from a [scala-oauth2-provider](https://github.com/nulab/scala-oauth2-provider) library. Since [scala-oauth2-provider](https://github.com/nulab/scala-oauth2-provider) it involves 
 
- - an asynchronus version of a `DataHandler` interface
- - an asynchronus version of both `TokenEndpoint` and `ProtectedResource` handlers
- - an asyncrhonus version of tests
+ - an asynchronous version of a `DataHandler` interface
+ - asynchronous versions of both `TokenEndpoint` and `ProtectedResource` handlers
+ - an asynchronous version of tests
  - three new finagled entities: `OAuth2`, `OAuth2Request`, `OAuth2Filter`
 
 This makes the usage of this library very sleek from a finagled environment. The brief usage instruction looks as follows:
 
  - define an implementation of a `DataHandler` interface
- - define a service that emmits access tokens
+ - define a service that emits access tokens
  - define a protected service using either
   - simple http service with `OAuth2` trait mixed or
   - type-safe service `Service[OAuth2Request[U], Response]` and `OAuth2Filter` applied
@@ -21,12 +21,12 @@ This makes the usage of this library very sleek from a finagled environment. The
 resolvers += "Finagle-OAuth2" at "http://repo.konfettin.ru"
 
 libraryDependencies ++= Seq(
-  "com.twitter" %% "oauth2" % "0.1.0"
+  "com.twitter" %% "oauth2" % "0.1.1"
 )
 ```
 
 #### Sample
-The sample bellow implements one of the OAuth2 supported schemas: _Client Credentials Flow_. Thus some of the methods in `LocalDataHandler` are not implemented. In order to provide a full-support of all avaiable OAuth2 schemas all the methods should be implemented. The high-level description of a Client Credentials Flow schema is following:
+The sample bellow implements one of the OAuth2 supported schemas: _Client Credentials Flow_. Thus some of the methods in `LocalDataHandler` are not implemented. In order to provide a full-support of all available OAuth2 schemas all the methods should be implemented. The high-level description of a Client Credentials Flow schema is following:
 
 _Emitting Tokens_
  - `validateClient`
@@ -122,11 +122,11 @@ object ProtectedService extends Service[Request, Response] with OAuth2 {
     }
 }
 ```
-In order to combine services togetger `RoutingService` may be used.
+In order to combine services together a `RoutingService` may be used.
 ```scala
 object Main extends App {
   val backend = RoutingService.byPathObject {
-    case Root / "authorize" => TokenService
+    case Root / "auth" => TokenService
     case Root / "hello" => ProtectedService
   }
 
@@ -139,7 +139,7 @@ object Main extends App {
 ```
 Testing services.
 ```bash
-$ curl -D - "localhost:8080/authorize?grant_type=client_credentials&client_id=Ivan&client_secret=12345"
+$ curl -D - "localhost:8080/auth?grant_type=client_credentials&client_id=Ivan&client_secret=12345"
 HTTP/1.1 200 OK
 Content-Length: 20
 
@@ -152,7 +152,7 @@ Content-Length: 7
 Hello 1
 ```
 #### A type-safe `OAuth2Filter` and `OAuth2Request`
-It's prefered to use the power of Finagle's filters along with type-safe srvices. The code bellow shows how to use two new building blocks `OAuth2Filter` and `OAuth2Request` in order to build robust type-safe services.
+It's preferred to use the power of Finagle filters along with type-safe services. The code bellow shows how to use two new building blocks `OAuth2Filter` and `OAuth2Request` in order to build robust type-safe services.
 ```scala
 import com.twitter.finagle.oauth2._
 import com.twitter.finagle.{OAuth2Request, OAuth2Filter}
