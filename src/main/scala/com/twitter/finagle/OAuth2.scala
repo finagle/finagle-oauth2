@@ -2,6 +2,8 @@ package com.twitter.finagle
 
 import com.twitter.finagle.http._
 import com.twitter.finagle.oauth2._
+import com.twitter.util.Future
+import scala.util.parsing.json.JSONObject
 
 trait OAuth2 {
 
@@ -31,12 +33,32 @@ case class OAuth2Request[U](authInfo: AuthInfo[U], underlying: Request) extends 
 }
 
 class OAuth2Filter[U](dataHandler: DataHandler[U])
-  extends Filter[Request, Response, OAuth2Request[U], Response] with OAuth2 {
+  extends Filter[Request, Response, OAuth2Request[U], Response] with OAuth2 with OAuthErrorHandler {
+
+  override def handleError(e: OAuthError) = e.toHttpResponse
 
   def apply(req: Request, service: Service[OAuth2Request[U], Response]) =
     authorize(req, dataHandler) flatMap { authInfo =>
       service(OAuth2Request(authInfo, req))
     } handle {
-      case e: OAuthError => e.toHttpResponse
+      case e: OAuthError => handleError(e)
+    }
+}
+
+class OAuth2Endpoint[U](dataHandler: DataHandler[U])
+  extends Service[Request, Response] with OAuth2 with OAuthErrorHandler with OAuthTokenConverter {
+
+  override def convertToken(token: GrantHandlerResult) = {
+    val rep = Response(Version.Http11, Status.Ok)
+    rep.setContentString(token.accessToken)
+
+    rep
+  }
+
+  override def handleError(e: OAuthError) = e.toHttpResponse
+
+  def apply(req: Request) =
+    issueAccessToken(req, dataHandler) map convertToken handle {
+      case e: OAuthError => handleError(e)
     }
 }
