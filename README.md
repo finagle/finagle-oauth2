@@ -21,7 +21,7 @@ This makes the usage of this library very sleek from a finagled environment. The
 resolvers += "Finagle-OAuth2" at "http://repo.konfettin.ru"
 
 libraryDependencies ++= Seq(
-  "com.twitter" %% "oauth2" % "0.1.1"
+  "com.twitter" %% "finagle-oauth2" % "0.1.1"
 )
 ```
 
@@ -80,7 +80,7 @@ object LocalDataHandler extends DataHandler[Long] {
   def findAuthInfoByAccessToken(accessToken: AccessToken) =
     Future.value(backwardStorage.get(accessToken.token))
 
-  // We don't need these methods for this example, we can just return 
+  // We don't need these methods for this example, so we can just return 
   // future of none. This will lead to a bad-request response for any
   // unsupported schema.
   def findAuthInfoByCode(code: String) = Future.None
@@ -151,7 +151,8 @@ Content-Length: 7
 
 Hello 1
 ```
-#### A type-safe `OAuth2Filter` and `OAuth2Request`
+
+#### Type-safe `OAuth2Filter` and `OAuth2Request`
 It's preferred to use the power of Finagle filters along with type-safe services. The code bellow shows how to use two new building blocks `OAuth2Filter` and `OAuth2Request` in order to build robust type-safe services.
 ```scala
 import com.twitter.finagle.oauth2._
