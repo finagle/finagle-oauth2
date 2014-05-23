@@ -2,8 +2,6 @@ package com.twitter.finagle
 
 import com.twitter.finagle.http._
 import com.twitter.finagle.oauth2._
-import com.twitter.util.Future
-import scala.util.parsing.json.JSONObject
 
 trait OAuth2 {
 
