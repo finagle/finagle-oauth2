@@ -12,7 +12,7 @@ object FinaleOAuth2 extends Build {
 
   lazy val buildSettings = Seq(
     organization := "com.twitter",
-    version := "0.1.2",
+    version := "0.1.3",
     scalaVersion := "2.10.3"
   )
 

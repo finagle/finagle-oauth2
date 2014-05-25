@@ -9,15 +9,13 @@ abstract class OAuthError(val statusCode: Int, val description: String) extends 
   val errorType: String
 
   def toHttpResponse = {
-    val bearer = Seq("error=\"" + errorType + "\"") ++ (
-      if (!description.isEmpty) Seq("error_description=\"" + description + "\"")
-      else Nil
-      ).mkString(", ")
+    val bearer = Seq("error=\"" + errorType + "\"") ++
+      (if (!description.isEmpty) Seq("error_description=\"" + description + "\"") else Nil)
 
     val rep = Response()
     rep.setProtocolVersion(Version.Http11)
     rep.setStatusCode(statusCode)
-    rep.headerMap.add("WWW-Authenticate", "Bearer " + bearer)
+    rep.headerMap.add("WWW-Authenticate", "Bearer " + bearer.mkString(", "))
 
     rep
   }
