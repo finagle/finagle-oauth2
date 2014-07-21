@@ -33,7 +33,7 @@ libraryDependencies ++= Seq(
 
 There are _two_ possible ways of using finagle-oauth2 provider:
 - via `OAuth2` trait mixed to finagled service
-- via predefined type-safe classes `OAuth2Request`, `OAuth2Filter`, `OAuth2Endpoint` (a preferred way)
+- via predefined type-safe classes `OAuth2Request`, `OAuth2Filter`, `OAuth2Endpoint` (a **preferred** way)
 
 ##### Using `OAuth2` trait
 
@@ -104,7 +104,8 @@ val backend = RoutingService.byPathObject {
 
 ##### Using `OAuth2Endpoint`
 
-It doesn't make sense to wirte an http service that emmits access tokens in every new project. A finagle-oauth2 provider contains a configurable version of `OAuth2Endpoint`.
+It doesn't make sense to write an http service that emits access tokens in every new project. 
+A finagle-oauth2 provider contains a configurable version of `OAuth2Endpoint`.
 
 ```scala
 import com.twitter.finagle.oauth2._
@@ -120,7 +121,8 @@ val backend = RoutingService.byPathObject {
 ```
 
 ##### `OAuthErrorHandler` and `OAuthTokenConverter`
-Both classes `OAuth2Filter` and `OAuth2Endpoint` uses trait-mixing in order to override the behaviour on handling errors and serializing tokens. The trais defines such behaviour is looks as following:
+Both classes `OAuth2Filter` and `OAuth2Endpoint` uses trait-mixing in order to override the behaviour on handling errors and serializing tokens. 
+The traits defines such behaviour look as following:
 
 ```scala
 trait OAuthErrorHandler {
@@ -143,7 +145,8 @@ trait MyErrorHandler extends OAuthErrorHandler {
 val tokens = new OAuth2Endpoint with MyErrorHandler
 ```
 
-By default errors are serialized in `WWW-Authenticate` header while access tokens are serialized as strings in a response body.
+By default errors are serialized in `WWW-Authenticate` header while access tokens are serialized as simple string in 
+the response body.
 
 There are also two predefined traits: `OAuthErrorInJson` and `OAuthTokenInJson` which serializes everything into JSON objects.
 
