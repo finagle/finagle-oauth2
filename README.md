@@ -118,6 +118,35 @@ val backend = RoutingService.byPathObject {
   case Root / "auth" => tokens
 }
 ```
+
+##### `OAuthErrorHandler` and `OAuthTokenConverter`
+Both classes `OAuth2Filter` and `OAuth2Endpoint` uses trait-mixing in order to override the behaviour on handling errors and serializing tokens. The trais defines such behaviour is looks as following:
+
+```scala
+trait OAuthErrorHandler {
+  def handleError(e: OAuthError): Response
+}
+
+trait OAuthTokenConverter {
+  def convertToken(token: GrantHandlerResult): Response
+}
+```
+
+So you can define your own error handler or token converter and mix it into a concrete instance like this:
+
+```scala
+trait MyErrorHandler extends OAuthErrorHandler {
+  // we don't care at all
+  def handleError(e: OAuthError) = Response(Status.Ok)
+}
+
+val tokens = new OAuth2Endpoint with MyErrorHandler
+```
+
+By default errors are serialized in `WWW-Authenticate` header while access tokens are serialized as strings in a response body.
+
+There are also two predefined traits: `OAuthErrorInJson` and `OAuthTokenInJson` which serializes everything into JSON objects.
+
 ----
 By Vladimir Kostyukov, http://vkostyukov.ru
 
