@@ -40,6 +40,7 @@ There are _two_ possible ways of using finagle-oauth2 provider:
 `OAuth2` trait provides two asynchronous methods: `issueAccessToken` and `authorize`. 
 
 > A token service that emits OAuth2 access tokens.
+
 ```scala
 import com.twitter.finagle.OAuth2
 import com.twitter.finagle.oauth2._
@@ -57,6 +58,7 @@ object TokenService extends Service[Request, Response] with OAuth2 {
 ```
 
 > A protected service that checks whether the request authorized or not.
+
 ```scala
 import com.twitter.finagle.OAuth2
 import com.twitter.finagle.oauth2._
@@ -73,7 +75,7 @@ object ProtectedService extends Service[Request, Response] with OAuth2 {
 }
 ```
 
-##### Using `OAuth2Filter`, `OAuth2Request` and `OAuth2Endpoint`
+##### Using type-safe `OAuth2Filter` and `OAuth2Request`
 
 It's preferred to use the power of Finagle filters along with type-safe services. 
 The code bellow shows how to use new building blocks `OAuth2Filter` and `OAuth2Request` 
@@ -83,9 +85,6 @@ in order to build robust type-safe services.
 import com.twitter.finagle.oauth2._
 import com.twitter.finagle.{OAuth2Request, OAuth2Filter, OAuth2Endpoint}
 
-// emitting access tokens via finagled service
-val tokens = new OAuth2Endpoint(dataHandler) with OAuthErrorInJson with OAuthTokenInJson
-  
 // accessing a protected resource via finagled filter
 val auth = new OAuth2Filter(dataHandler) with OAuthErrorInJson
 
@@ -99,8 +98,24 @@ val hello = new Service[OAuth2Request[User], Response] {
 
 // combines the things together
 val backend = RoutingService.byPathObject {
-  case Root / "auth" => tokens
   case Root / "hello" => auth andThen hello
+}
+```
+
+##### Using `OAuth2Endpoint`
+
+It doesn't make sense to wirte an http service that emmits access tokens in every new project. A finagle-oauth2 provider contains a configurable version of `OAuth2Endpoint`.
+
+```scala
+import com.twitter.finagle.oauth2._
+import com.twitter.finagle.{OAuth2Request, OAuth2Filter, OAuth2Endpoint}
+
+// emitting access tokens via finagled service
+val tokens = new OAuth2Endpoint(dataHandler) with OAuthErrorInJson with OAuthTokenInJson
+
+// combines the things together
+val backend = RoutingService.byPathObject {
+  case Root / "auth" => tokens
 }
 ```
 ----
