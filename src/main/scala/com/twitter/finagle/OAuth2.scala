@@ -1,41 +1,39 @@
 package com.twitter.finagle
 
-import com.twitter.finagle.http._
 import com.twitter.finagle.oauth2._
 
 trait OAuth2 {
 
-  private[this] def headersToMap(headers: HeaderMap) = (for {
+  private[this] def headersToMap(headers: httpx.HeaderMap) = (for {
     key <- headers.keys
   } yield (key, headers.getAll(key).toSeq)).toMap
 
-  private[this] def paramsToMap(params: ParamMap) = (for {
+  private[this] def paramsToMap(params: httpx.ParamMap) = (for {
     key <- params.keys
   } yield (key, params.getAll(key).toSeq)).toMap
 
-  def issueAccessToken[U](request: Request, dataHandler: DataHandler[U]) =
+  def issueAccessToken[U](request: httpx.Request, dataHandler: DataHandler[U]) =
     TokenEndpoint.handleRequest(
       AuthorizationRequest(headersToMap(request.headerMap), paramsToMap(request.params)),
       dataHandler
     )
 
-  def authorize[U](request: Request, dataHandler: DataHandler[U]) =
+  def authorize[U](request: httpx.Request, dataHandler: DataHandler[U]) =
     ProtectedResource.handleRequest(
       ProtectedResourceRequest(headersToMap(request.headerMap), paramsToMap(request.params)),
       dataHandler
     )
 }
 
-case class OAuth2Request[U](authInfo: AuthInfo[U], underlying: Request) extends RequestProxy {
-  def request: Request = underlying
-}
+case class OAuth2Request[U](authInfo: AuthInfo[U], httpRequest: httpx.Request)
 
 class OAuth2Filter[U](dataHandler: DataHandler[U])
-  extends Filter[Request, Response, OAuth2Request[U], Response] with OAuth2 with OAuthErrorHandler {
+    extends Filter[httpx.Request, httpx.Response, OAuth2Request[U], httpx.Response]
+    with OAuth2 with OAuthErrorHandler {
 
   override def handleError(e: OAuthError) = e.toHttpResponse
 
-  def apply(req: Request, service: Service[OAuth2Request[U], Response]) =
+  def apply(req: httpx.Request, service: Service[OAuth2Request[U], httpx.Response]) =
     authorize(req, dataHandler) flatMap { authInfo =>
       service(OAuth2Request(authInfo, req))
     } handle {
@@ -44,10 +42,11 @@ class OAuth2Filter[U](dataHandler: DataHandler[U])
 }
 
 class OAuth2Endpoint[U](dataHandler: DataHandler[U])
-  extends Service[Request, Response] with OAuth2 with OAuthErrorHandler with OAuthTokenConverter {
+    extends Service[httpx.Request, httpx.Response]
+    with OAuth2 with OAuthErrorHandler with OAuthTokenConverter {
 
   override def convertToken(token: GrantHandlerResult) = {
-    val rep = Response(Version.Http11, Status.Ok)
+    val rep = httpx.Response(httpx.Version.Http11, httpx.Status.Ok)
     rep.setContentString(token.accessToken)
 
     rep
@@ -55,7 +54,7 @@ class OAuth2Endpoint[U](dataHandler: DataHandler[U])
 
   override def handleError(e: OAuthError) = e.toHttpResponse
 
-  def apply(req: Request) =
+  def apply(req: httpx.Request) =
     issueAccessToken(req, dataHandler) map convertToken handle {
       case e: OAuthError => handleError(e)
     }

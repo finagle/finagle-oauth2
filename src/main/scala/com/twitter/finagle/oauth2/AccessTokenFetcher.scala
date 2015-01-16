@@ -5,22 +5,19 @@ import java.net.URLDecoder
 case class FetchResult(token: String, params: Map[String, String])
 
 trait AccessTokenFetcher {
-
   def matches(request: ProtectedResourceRequest): Boolean
-
   def fetch(request: ProtectedResourceRequest): FetchResult
-
 }
 
 object RequestParameter extends AccessTokenFetcher {
 
-  override def matches(request :ProtectedResourceRequest): Boolean = {
+  override def matches(request: ProtectedResourceRequest): Boolean = {
     request.oauthToken.isDefined || request.accessToken.isDefined
   }
 
   override def fetch(request: ProtectedResourceRequest): FetchResult = {
     val t = request.oauthToken.getOrElse(request.requireAccessToken)
-    val params = request.params.filter { case (k, v) => !v.isEmpty } map { case (k, v) => (k, v.head) }
+    val params = request.params.filter { case (k, v) => v.nonEmpty } map { case (k, v) => (k, v.head) }
     FetchResult(t, params - ("oauth_token", "access_token"))
   }
 }

@@ -20,12 +20,15 @@ This makes the usage of this library very sleek from a finagled environment. The
   - simple http service with `OAuth2` trait mixed or
   - type-safe service `Service[OAuth2Request[U], Response]` and `OAuth2Filter` applied
 
+Finagle OAuth2 is build on top of `finagle-httpx` (Netty-free implementation of the HTTP protocol in Finagle). 
+It compiles for both Scala 2.11.4 and 2.10.4.
+
 ### SBT Artifacts
 ```scala
 resolvers += "Finagle-OAuth2" at "http://repo.konfettin.ru"
 
 libraryDependencies ++= Seq(
-  "com.twitter" %% "finagle-oauth2" % "0.1.3"
+  "com.twitter" %% "finagle-oauth2" % "0.1.4"
 )
 ```
 
