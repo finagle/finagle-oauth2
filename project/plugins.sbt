@@ -1,3 +1,7 @@
-resolvers += Classpaths.typesafeReleases
+resolvers ++= Seq(
+  Classpaths.typesafeReleases,
+  Classpaths.sbtPluginReleases,
+  "jgit-repo" at "http://download.eclipse.org/jgit/maven"
+)
 
-addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.5.2")
+addSbtPlugin("com.typesafe.sbt" % "sbt-pgp" % "0.8.3")
