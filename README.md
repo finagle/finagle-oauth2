@@ -25,10 +25,8 @@ It compiles for both Scala 2.11.4 and 2.10.4.
 
 ### SBT Artifacts
 ```scala
-resolvers += "Finagle-OAuth2" at "http://repo.konfettin.ru"
-
 libraryDependencies ++= Seq(
-  "com.twitter" %% "finagle-oauth2" % "0.1.4"
+  "com.github.finagle" %% "finagle-oauth2" % "0.1.4"
 )
 ```
 

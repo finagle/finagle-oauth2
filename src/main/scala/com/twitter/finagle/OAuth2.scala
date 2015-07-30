@@ -1,5 +1,6 @@
 package com.twitter.finagle
 
+import com.twitter.util.Future
 import com.twitter.finagle.oauth2._
 
 trait OAuth2 {
@@ -12,13 +13,13 @@ trait OAuth2 {
     key <- params.keys
   } yield (key, params.getAll(key).toSeq)).toMap
 
-  def issueAccessToken[U](request: httpx.Request, dataHandler: DataHandler[U]) =
+  def issueAccessToken[U](request: httpx.Request, dataHandler: DataHandler[U]): Future[GrantHandlerResult] =
     TokenEndpoint.handleRequest(
       AuthorizationRequest(headersToMap(request.headerMap), paramsToMap(request.params)),
       dataHandler
     )
 
-  def authorize[U](request: httpx.Request, dataHandler: DataHandler[U]) =
+  def authorize[U](request: httpx.Request, dataHandler: DataHandler[U]): Future[AuthInfo[U]] =
     ProtectedResource.handleRequest(
       ProtectedResourceRequest(headersToMap(request.headerMap), paramsToMap(request.params)),
       dataHandler
