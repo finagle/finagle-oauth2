@@ -1,6 +1,6 @@
 package com.twitter.finagle.oauth2
 
-import com.twitter.finagle.httpx
+import com.twitter.finagle.http.{Response, Version, Status}
 
 abstract class OAuthError(val statusCode: Int, val description: String) extends Exception {
 
@@ -12,7 +12,7 @@ abstract class OAuthError(val statusCode: Int, val description: String) extends 
     val bearer = Seq("error=\"" + errorType + "\"") ++
       (if (!description.isEmpty) Seq("error_description=\"" + description + "\"") else Nil)
 
-    val rep = httpx.Response(httpx.Version.Http11, httpx.Status(statusCode))
+    val rep = Response(Version.Http11, Status(statusCode))
     rep.headerMap.add("WWW-Authenticate", "Bearer " + bearer.mkString(", "))
 
     rep

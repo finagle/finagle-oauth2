@@ -1,5 +1,8 @@
+[![Build Status](https://img.shields.io/travis/finagle/finagle-oauth2/master.svg)](https://travis-ci.org/finagle/finagle-oauth2)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.finagle/finagle-oauth2_2.11.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.finagle/finagle-oauth2_2.11)
+
 OAuth2 Provider for Finagle
----------------------------------------
+---------------------------
 
 This is a [finagled](https://github.com/twitter/finagle) **OAuth2** _server-side_ provider based on the source code from 
 a [scala-oauth2-provider](https://github.com/nulab/scala-oauth2-provider) library. 
@@ -21,12 +24,12 @@ This makes the usage of this library very sleek from a finagled environment. The
   - type-safe service `Service[OAuth2Request[U], Response]` and `OAuth2Filter` applied
 
 Finagle OAuth2 is build on top of `finagle-httpx` (Netty-free implementation of the HTTP protocol in Finagle). 
-It compiles for both Scala 2.11.4 and 2.10.4.
+It compiles for both Scala 2.11 and 2.10.
 
 ### SBT Artifacts
 ```scala
 libraryDependencies ++= Seq(
-  "com.github.finagle" %% "finagle-oauth2" % "0.1.4"
+  "com.github.finagle" %% "finagle-oauth2" % "0.1.5"
 )
 ```
 

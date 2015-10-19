@@ -1,13 +1,13 @@
 lazy val buildSettings = Seq(
   organization := "com.github.finagle",
-  version := "0.1.4",
+  version := "0.1.5",
   scalaVersion := "2.11.7",
   crossScalaVersions := Seq("2.10.5", "2.11.7")
 )
 
 val baseSettings = Seq(
   libraryDependencies ++= Seq(
-    "com.twitter" %% "finagle-httpx" % "6.27.0",
+    "com.twitter" %% "finagle-http" % "6.30.0",
     "org.scalacheck" %% "scalacheck" % "1.12.4" % "test",
     "org.scalatest" %% "scalatest" % "2.2.5" % "test"
   )

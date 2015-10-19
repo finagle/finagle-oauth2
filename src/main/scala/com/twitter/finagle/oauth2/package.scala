@@ -1,11 +1,12 @@
 package com.twitter.finagle
 
+import com.twitter.finagle.http.Response
 import scala.util.parsing.json.JSONObject
 
 package object oauth2 {
 
   trait OAuthErrorHandler {
-    def handleError(e: OAuthError): httpx.Response
+    def handleError(e: OAuthError): Response
   }
 
   trait OAuthErrorInJson extends OAuthErrorHandler {
@@ -25,12 +26,12 @@ package object oauth2 {
   }
 
   trait OAuthTokenConverter {
-    def convertToken(token: GrantHandlerResult): httpx.Response
+    def convertToken(token: GrantHandlerResult): Response
   }
 
   trait OAuthTokenInJson extends OAuthTokenConverter {
     override def convertToken(token: GrantHandlerResult) = {
-      val rep = httpx.Response(httpx.Version.Http11, httpx.Status.Ok)
+      val rep = Response()
       val json = Map[String, Any](
         "access_token" -> token.accessToken,
         "token_type" -> token.tokenType
