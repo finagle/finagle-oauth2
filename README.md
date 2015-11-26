@@ -82,7 +82,7 @@ object ProtectedService extends Service[Request, Response] with OAuth2 {
 ##### Using type-safe `OAuth2Filter` and `OAuth2Request`
 
 It's preferred to use the power of Finagle filters along with type-safe services. 
-The code bellow shows how to use new building blocks `OAuth2Filter` and `OAuth2Request` 
+The code below shows how to use new building blocks `OAuth2Filter` and `OAuth2Request` 
 in order to build robust type-safe services.
 
 ```scala
