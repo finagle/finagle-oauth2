@@ -11,10 +11,12 @@ class RequestBase(headers: TreeMap[String, Seq[String]], params: Map[String, Seq
 
   def header(name: String): Option[String] = headers.get(name).flatMap { _.headOption }
 
-  def requireHeader(name: String): String = header(name).getOrElse(throw new InvalidRequest("required header: " + name))
+  def requireHeader(name: String): String =
+    header(name).getOrElse(throw new InvalidRequest("required header: " + name))
 
   def param(name: String): Option[String] = params.get(name).flatMap(values => values.headOption)
 
-  def requireParam(name: String): String = param(name).getOrElse(throw new InvalidRequest("required parameter: " + name))
+  def requireParam(name: String): String =
+    param(name).getOrElse(throw new InvalidRequest("required parameter: " + name))
 
 }

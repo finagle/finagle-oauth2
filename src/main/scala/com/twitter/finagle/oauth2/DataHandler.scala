@@ -14,7 +14,12 @@ case class AccessTokenRequest[U](clientId: String, clientSecret: String, user: U
  * @param expiresIn Expiration date of access token. Unit is seconds.
  * @param createdAt Access token is created date.
  */
-case class AccessToken(token: String, refreshToken: Option[String], scope: Option[String], expiresIn: Option[Long], createdAt: Date)
+case class AccessToken(
+    token: String,
+    refreshToken: Option[String],
+    scope: Option[String],
+    expiresIn: Option[Long],
+    createdAt: Date)
 
 /**
  * Authorized information
@@ -24,7 +29,11 @@ case class AccessToken(token: String, refreshToken: Option[String], scope: Optio
  * @param scope Inform the client of the scope of the access token issued.
  * @param redirectUri This value is used by Authorization Code Grant.
  */
-case class AuthInfo[U](user: U, clientId: String, scope: Option[String], redirectUri: Option[String])
+case class AuthInfo[U](
+    user: U,
+    clientId: String,
+    scope: Option[String],
+    redirectUri: Option[String])
 
 /**
  * Provide accessing to data storage for using OAuth 2.0.
@@ -152,7 +161,8 @@ trait DataHandler[U] {
    * @param clientSecret Client send this value which is registered by application.
    * @return Return user that matched both values.
    */
-  def findClientUser(clientId: String, clientSecret: String, scope: Option[String]): Future[Option[U]]
+  def findClientUser(
+    clientId: String, clientSecret: String, scope: Option[String]): Future[Option[U]]
 
   /**
    * Find AccessToken object by access token code.

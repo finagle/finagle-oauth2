@@ -4,16 +4,17 @@
 OAuth2 Provider for Finagle
 ---------------------------
 
-This is a [finagled](https://github.com/twitter/finagle) **OAuth2** _server-side_ provider based on the source code from 
-a [scala-oauth2-provider](https://github.com/nulab/scala-oauth2-provider) library. 
-Since [scala-oauth2-provider](https://github.com/nulab/scala-oauth2-provider) it involves: 
+This is a [finagled](https://github.com/twitter/finagle) **OAuth2** _server-side_ provider based on
+the source code from a [scala-oauth2-provider](https://github.com/nulab/scala-oauth2-provider)
+library. Since [scala-oauth2-provider](https://github.com/nulab/scala-oauth2-provider) it involves:
 
  - an asynchronous version of a `DataHandler` trait
  - asynchronous versions of both `TokenEndpoint` and `ProtectedResource` handlers
  - an asynchronous version of unit tests
  - four new finagled entities: `OAuth2`, `OAuth2Request`, `OAuth2Filter`, `OAuth2Endpoint`
 
-This makes the usage of this library very sleek from a finagled environment. The brief usage instruction looks as follows:
+This makes the usage of this library very sleek from a finagled environment. The brief usage
+instruction looks as follows:
 
  - define an implementation of a `DataHandler` interface
  - define a service that emits access tokens using either
@@ -23,13 +24,12 @@ This makes the usage of this library very sleek from a finagled environment. The
   - simple http service with `OAuth2` trait mixed or
   - type-safe service `Service[OAuth2Request[U], Response]` and `OAuth2Filter` applied
 
-Finagle OAuth2 is build on top of `finagle-httpx` (Netty-free implementation of the HTTP protocol in Finagle). 
-It compiles for both Scala 2.11 and 2.10.
+Finagle OAuth2 is build on top of `finagle-http` and tt compiles with both Scala 2.11 and 2.10.
 
 ### SBT Artifacts
 ```scala
 libraryDependencies ++= Seq(
-  "com.github.finagle" %% "finagle-oauth2" % "0.1.5"
+  "com.github.finagle" %% "finagle-oauth2" % "0.1.6"
 )
 ```
 
@@ -37,7 +37,8 @@ libraryDependencies ++= Seq(
 
 There are _two_ possible ways of using finagle-oauth2 provider:
 - via `OAuth2` trait mixed to finagled service
-- via predefined type-safe classes `OAuth2Request`, `OAuth2Filter`, `OAuth2Endpoint` (a **preferred** way)
+- via predefined type-safe classes `OAuth2Request`, `OAuth2Filter`, `OAuth2Endpoint`
+  (a **preferred** way)
 
 ##### Using `OAuth2` trait
 
@@ -125,8 +126,9 @@ val backend = RoutingService.byPathObject {
 ```
 
 ##### `OAuthErrorHandler` and `OAuthTokenConverter`
-Both classes `OAuth2Filter` and `OAuth2Endpoint` uses trait-mixing in order to override the behaviour on handling errors and serializing tokens. 
-The traits defines such behaviour look as following:
+Both classes `OAuth2Filter` and `OAuth2Endpoint` uses trait-mixing in order to override the
+behaviour on handling errors and serializing tokens. The traits defines such behaviour look as
+following:
 
 ```scala
 trait OAuthErrorHandler {
@@ -138,7 +140,8 @@ trait OAuthTokenConverter {
 }
 ```
 
-So you can define your own error handler or token converter and mix it into a concrete instance like this:
+So you can define your own error handler or token converter and mix it into a concrete instance like
+this:
 
 ```scala
 trait MyErrorHandler extends OAuthErrorHandler {
@@ -149,11 +152,9 @@ trait MyErrorHandler extends OAuthErrorHandler {
 val tokens = new OAuth2Endpoint with MyErrorHandler
 ```
 
-By default errors are serialized in `WWW-Authenticate` header while access tokens are serialized as simple string in 
-the response body.
+By default errors are serialized in `WWW-Authenticate` header while access tokens are serialized as
+simple string in the response body.
 
-There are also two predefined traits: `OAuthErrorInJson` and `OAuthTokenInJson` which serializes everything into JSON objects.
-
-----
-By Vladimir Kostyukov, http://vkostyukov.ru
+There are also two predefined traits: `OAuthErrorInJson` and `OAuthTokenInJson` which serializes
+everything into JSON objects.
 

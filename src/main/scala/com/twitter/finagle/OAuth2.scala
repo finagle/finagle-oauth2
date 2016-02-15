@@ -14,11 +14,12 @@ trait OAuth2 {
     key <- params.keys
   } yield (key, params.getAll(key).toSeq)).toMap
 
-  def issueAccessToken[U](request: Request, dataHandler: DataHandler[U]): Future[GrantHandlerResult] =
-    TokenEndpoint.handleRequest(
-      AuthorizationRequest(headersToMap(request.headerMap), paramsToMap(request.params)),
-      dataHandler
-    )
+  def issueAccessToken[U](
+    request: Request, dataHandler: DataHandler[U]
+  ): Future[GrantHandlerResult] = TokenEndpoint.handleRequest(
+    AuthorizationRequest(headersToMap(request.headerMap), paramsToMap(request.params)),
+    dataHandler
+  )
 
   def authorize[U](request: http.Request, dataHandler: DataHandler[U]): Future[AuthInfo[U]] =
     ProtectedResource.handleRequest(

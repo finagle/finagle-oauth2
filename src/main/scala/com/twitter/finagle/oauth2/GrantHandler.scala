@@ -2,16 +2,27 @@ package com.twitter.finagle.oauth2
 
 import com.twitter.util.Future
 
-case class GrantHandlerResult(tokenType: String, accessToken: String, expiresIn: Option[Long], refreshToken: Option[String], scope: Option[String])
+case class GrantHandlerResult(
+    tokenType: String,
+    accessToken: String,
+    expiresIn: Option[Long],
+    refreshToken: Option[String],
+    scope: Option[String])
 
 trait GrantHandler {
 
-  def handleRequest[U](request: AuthorizationRequest, dataHandler: DataHandler[U]): Future[GrantHandlerResult]
+  def handleRequest[U](
+    request: AuthorizationRequest,
+    dataHandler: DataHandler[U]
+  ): Future[GrantHandlerResult]
 
   /**
    * Returns valid access token.
    */
-  def issueAccessToken[U](dataHandler: DataHandler[U], authInfo: AuthInfo[U]): Future[GrantHandlerResult] = for {
+  def issueAccessToken[U](
+    dataHandler: DataHandler[U],
+    authInfo: AuthInfo[U]
+  ): Future[GrantHandlerResult] = for {
     tokenOption <- dataHandler.getStoredAccessToken(authInfo)
     token <- tokenOption match {
       case Some(t) if dataHandler.isAccessTokenExpired(t) =>
@@ -31,7 +42,10 @@ trait GrantHandler {
 
 class RefreshToken(clientCredentialFetcher: ClientCredentialFetcher) extends GrantHandler {
 
-  override def handleRequest[U](request: AuthorizationRequest, dataHandler: DataHandler[U]): Future[GrantHandlerResult] = {
+  override def handleRequest[U](
+    request: AuthorizationRequest,
+    dataHandler: DataHandler[U]
+  ): Future[GrantHandlerResult] = {
     val clientCredential = clientCredentialFetcher.fetch(request) match {
       case Some(c) => Future.value(c)
       case None => Future.exception(new InvalidRequest("BadRequest"))
@@ -61,7 +75,10 @@ class RefreshToken(clientCredentialFetcher: ClientCredentialFetcher) extends Gra
 
 class Password(clientCredentialFetcher: ClientCredentialFetcher) extends GrantHandler {
 
-  override def handleRequest[U](request: AuthorizationRequest, dataHandler: DataHandler[U]): Future[GrantHandlerResult] = {
+  override def handleRequest[U](
+    request: AuthorizationRequest,
+    dataHandler: DataHandler[U]
+  ): Future[GrantHandlerResult] = {
     val clientCredential = clientCredentialFetcher.fetch(request) match {
       case Some(c) => Future.value(c)
       case None => Future.exception(new InvalidRequest("BadRequest"))
@@ -85,7 +102,10 @@ class Password(clientCredentialFetcher: ClientCredentialFetcher) extends GrantHa
 
 class ClientCredentials(clientCredentialFetcher: ClientCredentialFetcher) extends GrantHandler {
 
-  override def handleRequest[U](request: AuthorizationRequest, dataHandler: DataHandler[U]): Future[GrantHandlerResult] = {
+  override def handleRequest[U](
+    request: AuthorizationRequest,
+    dataHandler: DataHandler[U]
+  ): Future[GrantHandlerResult] = {
     val clientCredential = clientCredentialFetcher.fetch(request) match {
       case Some(c) => Future.value(c)
       case None => Future.exception(new InvalidRequest("BadRequest"))
@@ -107,7 +127,10 @@ class ClientCredentials(clientCredentialFetcher: ClientCredentialFetcher) extend
 
 class AuthorizationCode(clientCredentialFetcher: ClientCredentialFetcher) extends GrantHandler {
 
-  override def handleRequest[U](request: AuthorizationRequest, dataHandler: DataHandler[U]): Future[GrantHandlerResult] = {
+  override def handleRequest[U](
+    request: AuthorizationRequest,
+    dataHandler: DataHandler[U]
+  ): Future[GrantHandlerResult] = {
     val clientCredential = clientCredentialFetcher.fetch(request) match {
       case Some(c) => Future.value(c)
       case None => Future.exception(new InvalidRequest("BadRequest"))
@@ -121,8 +144,10 @@ class AuthorizationCode(clientCredentialFetcher: ClientCredentialFetcher) extend
       infoOption <- dataHandler.findAuthInfoByCode(code)
       info <- infoOption match {
         case Some(i) =>
-          if (i.clientId != credential.clientId) Future.exception(new InvalidClient())
-          else if (i.redirectUri.isDefined && i.redirectUri != redirectUri) Future.exception(new RedirectUriMismatch())
+          if (i.clientId != credential.clientId)
+            Future.exception(new InvalidClient())
+          else if (i.redirectUri.isDefined && i.redirectUri != redirectUri)
+            Future.exception(new RedirectUriMismatch())
           else Future.value(i)
         case None => Future.exception(new InvalidGrant())
       }

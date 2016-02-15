@@ -1,13 +1,13 @@
 lazy val buildSettings = Seq(
   organization := "com.github.finagle",
-  version := "0.1.5",
+  version := "0.1.6",
   scalaVersion := "2.11.7",
   crossScalaVersions := Seq("2.10.5", "2.11.7")
 )
 
 val baseSettings = Seq(
   libraryDependencies ++= Seq(
-    "com.twitter" %% "finagle-http" % "6.30.0",
+    "com.twitter" %% "finagle-http" % "6.33.0",
     "org.scalacheck" %% "scalacheck" % "1.12.4" % "test",
     "org.scalatest" %% "scalatest" % "2.2.5" % "test"
   )
@@ -38,13 +38,13 @@ lazy val publishSettings = Seq(
       <developer>
         <id>vkostyukov</id>
         <name>Vladimir Kostyukov</name>
-        <url>http://vkostyukov.ru</url>
+        <url>http://vkostyukov.net</url>
       </developer>
     </developers>
 )
 
 lazy val allSettings = baseSettings ++ buildSettings ++ publishSettings
 
-lazy val root = project.in(file("."))
+lazy val oauth2 = project.in(file("."))
   .settings(moduleName := "finagle-oauth2")
   .settings(allSettings)

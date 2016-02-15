@@ -13,7 +13,10 @@ class TokenEndpoint {
     "password" -> new Password(fetcher)
   )
 
-  def handleRequest[U](request: AuthorizationRequest, dataHandler: DataHandler[U]): Future[GrantHandlerResult] = for {
+  def handleRequest[U](
+    request: AuthorizationRequest,
+    dataHandler: DataHandler[U]
+  ): Future[GrantHandlerResult] = for {
     grantType <- request.grantType match {
       case Some(t) => Future.value(t)
       case None => Future.exception(new InvalidRequest("grant_type not found"))
