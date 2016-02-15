@@ -8,7 +8,7 @@ trait ClientCredentialFetcher {
 
   def fetch(request: AuthorizationRequest): Option[ClientCredential] = {
     request.header("Authorization") match {
-      case Some(authorization) if authorization.length > 5 => {
+      case Some(authorization) if authorization.length > 5 =>
         val decoded = new String(Base64.decodeBase64(authorization.substring(6).getBytes), "UTF-8")
         if (decoded.indexOf(':') > 0) {
           decoded.split(":", 2) match {
@@ -19,7 +19,6 @@ trait ClientCredentialFetcher {
         } else {
           None
         }
-      }
       case _ => request.clientId.map { clientId =>
         ClientCredential(clientId, request.clientSecret.getOrElse(""))
       }
