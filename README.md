@@ -29,7 +29,7 @@ Finagle OAuth2 is build on top of `finagle-http` and tt compiles with both Scala
 ### SBT Artifacts
 ```scala
 libraryDependencies ++= Seq(
-  "com.github.finagle" %% "finagle-oauth2" % "0.1.7"
+  "com.github.finagle" %% "finagle-oauth2" % "0.2.0"
 )
 ```
 

@@ -1,6 +1,6 @@
 lazy val buildSettings = Seq(
   organization := "com.github.finagle",
-  version := "0.1.7",
+  version := "0.2.0",
   scalaVersion := "2.11.8"
 )
 
