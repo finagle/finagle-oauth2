@@ -6,7 +6,7 @@ lazy val buildSettings = Seq(
 
 val baseSettings = Seq(
   libraryDependencies ++= Seq(
-    "com.twitter" %% "finagle-http" % "6.40.0",
+    "com.twitter" %% "finagle-http" % "6.39.0",
     "org.scalacheck" %% "scalacheck" % "1.13.2" % "test",
     "org.scalatest" %% "scalatest" % "3.0.0" % "test"
   )
@@ -45,5 +45,5 @@ lazy val publishSettings = Seq(
 lazy val allSettings = baseSettings ++ buildSettings ++ publishSettings
 
 lazy val oauth2 = project.in(file("."))
-  .settings(moduleName := "finagle-oauth2")
+  .settings(moduleName := "finagle639-oauth2")
   .settings(allSettings)
