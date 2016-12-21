@@ -1,5 +1,5 @@
 [![Build Status](https://img.shields.io/travis/finagle/finagle-oauth2/master.svg)](https://travis-ci.org/finagle/finagle-oauth2)
-[![Maven Central](https://img.shields.io/maven-central/v/com.github.finagle/finagle-oauth2_2.11.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.finagle/finagle-oauth2_2.11)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.finagle/finagle-oauth2_2.12.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.finagle/finagle-oauth2_2.12)
 
 OAuth2 Provider for Finagle
 ---------------------------
