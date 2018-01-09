@@ -4,4 +4,4 @@ resolvers ++= Seq(
   "jgit-repo" at "http://download.eclipse.org/jgit/maven"
 )
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-pgp" % "0.8.3")
+addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.0")
