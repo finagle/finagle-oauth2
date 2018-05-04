@@ -1,4 +1,4 @@
-lazy val finagleVersion = "17.12.0"
+lazy val finagleVersion = "18.4.0"
 
 lazy val buildSettings = Seq(
   organization := "com.github.finagle",
