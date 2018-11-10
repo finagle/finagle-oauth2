@@ -1,6 +1,7 @@
 package com.twitter.finagle.oauth2
 
 import java.util.Base64
+import scala.util.Try
 
 case class ClientCredential(clientId: String, clientSecret: String)
 
@@ -8,10 +9,7 @@ trait ClientCredentialFetcher {
 
   private[this] val base64Decoder = Base64.getMimeDecoder
   private[this] def tryDecode(encoded: String): Option[String] = {
-    try Some(new String(base64Decoder.decode(encoded), "UTF-8"))
-    catch {
-      case iae: IllegalArgumentException => None
-    }
+    Try(new String(base64Decoder.decode(encoded), "UTF-8")).toOption
   }
   private[this] val basicAuthPattern = "(?i)basic.*".r.pattern
   private[this] def isBasicAuthHeader(header: String): Boolean =
