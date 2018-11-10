@@ -23,7 +23,7 @@ lazy val publishSettings = Seq(
     if (isSnapshot.value)
       Some("snapshots" at nexus + "content/repositories/snapshots")
     else
-      Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+      Some("releases" at nexus + "service/local/staging/deploy/maven2")
   },
   publishArtifact in Test := false,
   licenses := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
@@ -40,7 +40,7 @@ lazy val publishSettings = Seq(
       <developer>
         <id>vkostyukov</id>
         <name>Vladimir Kostyukov</name>
-        <url>http://vkostyukov.net</url>
+        <url>https://kostyukov.net</url>
       </developer>
     </developers>
 )
