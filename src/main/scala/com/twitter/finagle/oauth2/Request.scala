@@ -40,16 +40,13 @@ object Request {
     def oauthToken: Option[String] = param("oauth_token")
     def accessToken: Option[String] = param("access_token")
     def requireAccessToken: String = requireParam("access_token")
+    def authorizationToken: Option[String] = for {
+      authorization <- header("Authorization")
+      matcher <- WwwAuthorizationPattern.findFirstMatchIn(authorization)
+    } yield matcher.group(2)
 
-    def token: Option[String] = {
-      def authorizationToken: Option[String] =
-        for {
-          authorization <- header("Authorization")
-          matcher <- WwwAuthorizationPattern.findFirstMatchIn(authorization)
-        } yield matcher.group(2)
-
+    def token: Option[String] =
       oauthToken.orElse(accessToken).orElse(authorizationToken)
-    }
   }
 
   final class Authorization(

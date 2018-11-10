@@ -1,13 +1,16 @@
 package com.twitter.finagle.oauth2
 
+import com.twitter.finagle.http.{HeaderMap, ParamMap}
 import org.scalatest._
 import org.scalatest.Matchers._
 
 class AuthHeaderSpec extends FlatSpec {
 
-  def createRequest(authorization: Option[String]): ProtectedResourceRequest = authorization match {
-    case Some(s) => ProtectedResourceRequest(Map("Authorization" -> Seq(s)), Map())
-    case _ => ProtectedResourceRequest(Map(), Map())
+  def createRequest(authorization: Option[String]): Request.ProtectedResource = authorization match {
+    case Some(s) =>
+      new Request.ProtectedResource(HeaderMap("Authorization" -> s), ParamMap())
+    case _ =>
+      new Request.ProtectedResource(HeaderMap(), ParamMap())
   }
 
   it should "match AuthHeader from OAuth" in {

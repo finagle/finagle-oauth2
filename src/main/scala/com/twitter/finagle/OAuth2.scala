@@ -3,6 +3,40 @@ package com.twitter.finagle
 import com.twitter.util.Future
 import com.twitter.finagle.oauth2._
 
+/**
+ * An entry point API to enable OAuth2 in Finagle services (server-side).
+ *
+ * Issuing a token:
+ *
+ * {{{
+ *   import com.twitter.finagle.OAuth2
+ *   import com.twitter.finagle.oauth2.{DataHandler, Grant}
+ *   import com.twitter.finagle.http.Request
+ *   import com.twitter.util.Future
+ *
+ *   val dataHandler: DataHandler[?] = ???
+ *   val request: Request = ??? // contains client credentials
+ *
+ *   val grant: Future[Grant] = OAuth2.issueAccessToken(request, dataHandler)
+ * }}}
+ *
+ * Authorizing a request:
+ *
+ * {{{
+ *    import com.twitter.finagle.OAuth2
+ *    import com.twitter.finagle.oauth2.{AuthInfo, DataHandler}
+ *    import com.twitter.finagle.http.Request
+ *    import com.twitter.util.Future
+ *
+ *    val dataHandler: DataHandler[?] = ???
+ *    val request: Request = ??? // contains token
+ *
+ *    val authInfo: AuthInfo[?] = OAuth2.authorize(request, dataHandler)
+ * }}}
+ *
+ * Note both `authorize` and `issueAccessToken` may resolve into `Future.exception` containing
+ * [[OAuthError]], which could be converted into a barebones HTTP response via `.toResponse`:
+ */
 trait OAuth2 {
 
   def issueAccessToken[U](

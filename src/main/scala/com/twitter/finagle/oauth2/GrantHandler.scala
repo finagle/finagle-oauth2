@@ -2,7 +2,7 @@ package com.twitter.finagle.oauth2
 
 import com.twitter.util.Future
 
-abstract class GrantHandler {
+sealed abstract class GrantHandler {
   def handle[U](
     request: Request.Authorization,
     dataHandler: DataHandler[U]

@@ -8,7 +8,7 @@ package com.twitter.finagle.oauth2
  * @param scope Inform the client of the scope of the access token issued.
  * @param redirectUri This value is used by Authorization Code Grant.
  */
-case class AuthInfo[U](
+final case class AuthInfo[U](
   user: U,
   clientId: String,
   scope: Option[String],

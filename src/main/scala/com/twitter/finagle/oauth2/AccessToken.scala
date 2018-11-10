@@ -11,7 +11,7 @@ import java.util.Date
  * @param expiresIn Expiration date of access token. Unit is seconds.
  * @param createdAt Access token is created date.
  */
-case class AccessToken(
+final case class AccessToken(
   token: String,
   refreshToken: Option[String],
   scope: Option[String],
