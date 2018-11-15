@@ -1,7 +1,16 @@
-sudo: false
 language: scala
-scala:
-   - 2.11.8
-   - 2.12.1
+branches:
+  except:
+  - release
+sudo: true
 jdk:
-  - oraclejdk8
+- oraclejdk8
+before_cache:
+- find $HOME/.ivy2 -name "ivydata-*.properties" -delete
+- find $HOME/.sbt -name "*.lock" -delete
+cache:
+  directories:
+  - "$HOME/.ivy2/cache"
+  - "$HOME/.sbt/boot/"
+script:
+ - "./build/build.sh"
