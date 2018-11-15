@@ -1,6 +1,6 @@
 package com.twitter.finagle.oauth2
 
-final case class Grant(
+final case class GrantResult(
   tokenType: String,
   accessToken: String,
   expiresIn: Option[Long],

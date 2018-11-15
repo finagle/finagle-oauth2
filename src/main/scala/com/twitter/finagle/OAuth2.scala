@@ -42,13 +42,13 @@ trait OAuth2 {
   def issueAccessToken[U](
     request: http.Request,
     dataHandler: DataHandler[U]
-  ): Future[Grant] =
+  ): Future[GrantResult] =
     issueAccessToken(new Request.Authorization(request.headerMap, request.params), dataHandler)
 
   def issueAccessToken[U](
     request: Request.Authorization,
     dataHandler: DataHandler[U]
-  ): Future[Grant] = for {
+  ): Future[GrantResult] = for {
     grantType <- request.grantType match {
       case Some(t) => Future.value(t)
       case None => Future.exception(new InvalidRequest("grant_type not found"))

@@ -39,7 +39,6 @@ object Request {
 
     def oauthToken: Option[String] = param("oauth_token")
     def accessToken: Option[String] = param("access_token")
-    def requireAccessToken: String = requireParam("access_token")
     def authorizationToken: Option[String] = for {
       authorization <- header("Authorization")
       matcher <- WwwAuthorizationPattern.findFirstMatchIn(authorization)

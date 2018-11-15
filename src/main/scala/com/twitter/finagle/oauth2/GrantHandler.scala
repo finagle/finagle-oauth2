@@ -6,12 +6,12 @@ sealed abstract class GrantHandler {
   def handle[U](
     request: Request.Authorization,
     dataHandler: DataHandler[U]
-  ): Future[Grant]
+  ): Future[GrantResult]
 
   protected def issueAccessToken[U](
     dataHandler: DataHandler[U],
     authInfo: AuthInfo[U]
-  ): Future[Grant] = for {
+  ): Future[GrantResult] = for {
     tokenOption <- dataHandler.getStoredAccessToken(authInfo)
     token <- tokenOption match {
       case Some(t) if dataHandler.isAccessTokenExpired(t) =>
@@ -20,7 +20,7 @@ sealed abstract class GrantHandler {
       case Some(t) => Future.value(t)
       case None => dataHandler.createAccessToken(authInfo)
     }
-  } yield Grant(
+  } yield GrantResult(
     "Bearer",
     token.token,
     token.expiresIn,
@@ -43,7 +43,7 @@ object GrantHandler {
     def handle[U](
       request: Request.Authorization,
       dataHandler: DataHandler[U]
-    ): Future[Grant] = {
+    ): Future[GrantResult] = {
       val clientCredential = request.clientCredential match {
         case Some(c) => Future.value(c)
         case None => Future.exception(new InvalidRequest("BadRequest"))
@@ -61,7 +61,7 @@ object GrantHandler {
           case None => Future.exception(new InvalidGrant("NotFound"))
         }
         token <- dataHandler.refreshAccessToken(info, refreshToken)
-      } yield Grant(
+      } yield GrantResult(
         "Bearer",
         token.token,
         token.expiresIn,
@@ -76,7 +76,7 @@ object GrantHandler {
     def handle[U](
       request: Request.Authorization,
       dataHandler: DataHandler[U]
-    ): Future[Grant] = {
+    ): Future[GrantResult] = {
       val clientCredential = request.clientCredential match {
         case Some(c) => Future.value(c)
         case None => Future.exception(new InvalidRequest("BadRequest"))
@@ -103,7 +103,7 @@ object GrantHandler {
     def handle[U](
       request: Request.Authorization,
       dataHandler: DataHandler[U]
-    ): Future[Grant] = {
+    ): Future[GrantResult] = {
       val clientCredential = request.clientCredential match {
         case Some(c) => Future.value(c)
         case None => Future.exception(new InvalidRequest("BadRequest"))
@@ -128,7 +128,7 @@ object GrantHandler {
     def handle[U](
       request: Request.Authorization,
       dataHandler: DataHandler[U]
-    ): Future[Grant] = {
+    ): Future[GrantResult] = {
       val clientCredential = request.clientCredential match {
         case Some(c) => Future.value(c)
         case None => Future.exception(new InvalidRequest("BadRequest"))
