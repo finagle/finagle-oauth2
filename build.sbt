@@ -1,8 +1,9 @@
+import ReleaseTransformations._
+
 lazy val finagleVersion = "18.10.0"
 
 lazy val buildSettings = Seq(
   organization := "com.github.finagle",
-  version := finagleVersion,
   scalaVersion := "2.12.7",
   crossScalaVersions := Seq("2.11.12", "2.12.7")
 )
@@ -26,6 +27,10 @@ lazy val publishSettings = Seq(
       Some("releases" at nexus + "service/local/staging/deploy/maven2")
   },
   publishArtifact in Test := false,
+  pgpSecretRing := file("local.secring.gpg"),
+  pgpPublicRing := file("local.pubring.gpg"),
+  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+  releaseIgnoreUntrackedFiles := true,
   licenses := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
   homepage := Some(url("https://github.com/finagle/finagle-oauth2")),
   autoAPIMappings := true,
@@ -35,6 +40,23 @@ lazy val publishSettings = Seq(
       "scm:git:git@github.com:finagle/finagle-oauth2.git"
     )
   ),
+  releaseVersionBump := sbtrelease.Version.Bump.Minor,
+  releaseProcess := {
+    Seq[ReleaseStep](
+      checkSnapshotDependencies,
+      inquireVersions,
+      releaseStepCommandAndRemaining("+clean"),
+      releaseStepCommandAndRemaining("+test"),
+      setReleaseVersion,
+      commitReleaseVersion,
+      tagRelease,
+      releaseStepCommandAndRemaining("+publishSigned"),
+      setNextVersion,
+      commitNextVersion,
+      releaseStepCommand("sonatypeReleaseAll"),
+      pushChanges
+    )
+  },
   pomExtra :=
     <developers>
       <developer>
