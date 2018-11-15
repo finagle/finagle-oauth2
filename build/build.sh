@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
-SBT_CMD="sbt +validate"
+SBT_CMD="sbt +test"
 
 if [[ "${TRAVIS_PULL_REQUEST}" == "false" ]]; then
-    SBT_CMD+=" +coverageOff +publish"
+    SBT_CMD+=" +publish"
     openssl aes-256-cbc -pass env:ENCRYPTION_PASSWORD -in ./build/secring.gpg.enc -out local.secring.gpg -d
     openssl aes-256-cbc -pass env:ENCRYPTION_PASSWORD -in ./build/pubring.gpg.enc -out local.pubring.gpg -d
     openssl aes-256-cbc -pass env:ENCRYPTION_PASSWORD -in ./build/credentials.sbt.enc -out local.credentials.sbt -d
