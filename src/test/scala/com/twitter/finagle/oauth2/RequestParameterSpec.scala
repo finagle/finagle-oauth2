@@ -1,46 +1,31 @@
 package com.twitter.finagle.oauth2
 
+import com.twitter.finagle.http.{HeaderMap, ParamMap}
 import org.scalatest.Matchers._
 import org.scalatest.FlatSpec
 
 class RequestParameterSpec extends FlatSpec {
 
-  def createRequest(oauthToken: Option[String], accessToken: Option[String], another: Map[String, Seq[String]] = Map()): ProtectedResourceRequest = {
-    val params = oauthToken.map { "oauth_token" -> Seq(_) } ++ accessToken.map { "access_token" -> Seq(_) }
-    ProtectedResourceRequest(Map(), Map() ++ params ++ another)
+  def createRequest(
+    oauthToken: Option[String],
+    accessToken: Option[String],
+    another: Seq[(String, String)] = Seq.empty
+  ): Request.ProtectedResource = {
+    val params =
+      oauthToken.fold(Seq.empty[(String, String)])(t => Seq("oauth_token" -> t)) ++
+      accessToken.fold(Seq.empty[(String, String)])(t => Seq("access_token" -> t)) ++
+      another
+
+    new Request.ProtectedResource(HeaderMap(), ParamMap(params: _*))
   }
 
   it should "match RequestParameter" in {
-    RequestParameter.matches(createRequest(Some("token1"), None)) should be (true)
-    RequestParameter.matches(createRequest(None, Some("token2"))) should be (true)
-    RequestParameter.matches(createRequest(Some("token1"), Some("token2"))) should be (true)
+    createRequest(Some("token1"), None).token shouldBe Some("token1")
+    createRequest(None, Some("token2")).token shouldBe Some("token2")
+    createRequest(Some("token1"), Some("token2")).token shouldBe Some("token1")
   }
 
   it should "doesn't match RequestParameter" in {
-    RequestParameter.matches(createRequest(None, None)) should be (false)
-  }
-
-  it should "fetch only oauth token parameter" in {
-    val result = RequestParameter.fetch(createRequest(Some("token1"), None))
-    result.token should be ("token1")
-    result.params should be ('empty)
-  }
-
-  it should "fetch only access token parameter" in {
-    val result = RequestParameter.fetch(createRequest(None, Some("token2")))
-    result.token should be ("token2")
-    result.params should be ('empty)
-  }
-
-  it should "fetch with another parameter" in {
-    val result = RequestParameter.fetch(createRequest(None, Some("token2"), Map("foo" -> Seq("bar"))))
-    result.token should be ("token2")
-    result.params.get("foo") should be (Some("bar"))
-  }
-
-  it should "fetch illegal parameter then throws exception" in {
-    intercept[InvalidRequest] {
-      RequestParameter.fetch(createRequest(None, None))
-    }
+    createRequest(None, None).token shouldBe None
   }
 }

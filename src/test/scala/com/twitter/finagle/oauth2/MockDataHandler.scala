@@ -7,13 +7,13 @@ case class MockUser(id: Long, name: String)
 
 class MockDataHandler extends DataHandler[MockUser] {
 
-  def validateClient(clientId: String, clientSecret: String, grantType: String) =
+  def validateClient(clientId: String, clientSecret: String, grantType: String): Future[Boolean] =
     Future.value(false)
 
   def findUser(username: String, password: String): Future[Option[MockUser]] =
     Future.value(None)
 
-  def createAccessToken(authInfo: AuthInfo[MockUser]) =
+  def createAccessToken(authInfo: AuthInfo[MockUser]): Future[AccessToken] =
     Future.value(AccessToken("", Some(""), Some(""), Some(0L), new Date()))
 
   def findAuthInfoByCode(code: String): Future[Option[AuthInfo[MockUser]]] =
@@ -30,7 +30,7 @@ class MockDataHandler extends DataHandler[MockUser] {
 
   def findAuthInfoByAccessToken(accessToken: AccessToken): Future[Option[AuthInfo[MockUser]]] =
     Future.value(None)
-  
+
   def getStoredAccessToken(authInfo: AuthInfo[MockUser]): Future[Option[AccessToken]] =
     Future.value(None)
 
