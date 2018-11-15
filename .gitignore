@@ -1,7 +1,10 @@
 *.iml
-/target/
-/project/target/
-/project/project/target/
-/.idea/
-/.idea_modules/
-Demo.scala
+target/
+.idea/
+.idea_modules/
+.DS_STORE
+.cache
+.settings
+.project
+.classpath
+local.*
