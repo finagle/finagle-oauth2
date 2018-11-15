@@ -13,4 +13,7 @@ cache:
   - "$HOME/.ivy2/cache"
   - "$HOME/.sbt/boot/"
 script:
- - "./build/build.sh"
+- "./build/build.sh"
+env:
+  global:
+    secure: XGe1fOKTjJsqet5Zn3xlCbBtJ9n2uUH9ukgnpojBT65p5ETNr4U/NPNsryL9TZk0DsPKdDNKrb9RmadeMcKjNa0x+p7WXYlogQr+rJgcjAo6POhBzGcPM22XGSNzCmZOKmKT0LM7cuGiQ63QEefdzGxsqE8baljHUWFatvCxPXY=
