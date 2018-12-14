@@ -1,6 +1,6 @@
 import ReleaseTransformations._
 
-lazy val finagleVersion = "18.11.0"
+lazy val finagleVersion = "18.12.0"
 
 lazy val buildSettings = Seq(
   organization := "com.github.finagle",
