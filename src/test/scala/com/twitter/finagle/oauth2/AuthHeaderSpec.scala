@@ -2,9 +2,11 @@ package com.twitter.finagle.oauth2
 
 import com.twitter.finagle.http.{HeaderMap, ParamMap}
 import org.scalatest._
-import org.scalatest.Matchers._
+import matchers.should.Matchers._
+import org.scalatest.matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
-class AuthHeaderSpec extends FlatSpec {
+class AuthHeaderSpec extends AnyFlatSpec {
 
   def createRequest(authorization: Option[String]): Request.ProtectedResource = authorization match {
     case Some(s) =>
