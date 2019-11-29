@@ -4,10 +4,11 @@ import com.twitter.finagle.OAuth2
 import com.twitter.finagle.http.{HeaderMap, ParamMap}
 import com.twitter.util.{Await, Future}
 import java.util.Date
-import org.scalatest.FlatSpec
-import org.scalatest.Matchers._
+import matchers.should.Matchers._
+import org.scalatest.matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
-class EndToEndSpec extends FlatSpec {
+class EndToEndSpec extends AnyFlatSpec {
 
   def successfulAccessTokenHandler(): MockDataHandler = new MockDataHandler() {
     override def validateClient(clientId: String, clientSecret: String, grantType: String): Future[Boolean] =
