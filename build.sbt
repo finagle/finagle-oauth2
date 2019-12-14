@@ -11,7 +11,7 @@ lazy val buildSettings = Seq(
 val baseSettings = Seq(
   libraryDependencies ++= Seq(
     "com.twitter" %% "finagle-http" % finagleVersion,
-    "org.scalacheck" %% "scalacheck" % "1.14.0" % Test,
+    "org.scalacheck" %% "scalacheck" % "1.14.3" % Test,
     "org.scalatest" %% "scalatest" % "3.0.8" % Test
   )
 )
