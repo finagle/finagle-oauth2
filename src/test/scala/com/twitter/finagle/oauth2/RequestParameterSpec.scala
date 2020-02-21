@@ -1,10 +1,11 @@
 package com.twitter.finagle.oauth2
 
 import com.twitter.finagle.http.{HeaderMap, ParamMap}
-import org.scalatest.Matchers._
-import org.scalatest.FlatSpec
+import matchers.should.Matchers._
+import org.scalatest.matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
-class RequestParameterSpec extends FlatSpec {
+class RequestParameterSpec extends AnyFlatSpec {
 
   def createRequest(
     oauthToken: Option[String],
