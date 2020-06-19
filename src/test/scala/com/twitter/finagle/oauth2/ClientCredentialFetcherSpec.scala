@@ -1,10 +1,11 @@
 package com.twitter.finagle.oauth2
 
 import com.twitter.finagle.http.{HeaderMap, ParamMap}
-import org.scalatest.FlatSpec
-import org.scalatest.Matchers._
+import matchers.should.Matchers._
+import org.scalatest.matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
-class ClientCredentialFetcherSpec extends FlatSpec {
+class ClientCredentialFetcherSpec extends AnyFlatSpec {
 
   it should "fetch Basic64" in {
     val request = new Request.Authorization(
