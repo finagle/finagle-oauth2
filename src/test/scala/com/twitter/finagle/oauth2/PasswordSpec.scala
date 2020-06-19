@@ -2,10 +2,12 @@ package com.twitter.finagle.oauth2
 
 import com.twitter.finagle.http.{HeaderMap, ParamMap}
 import org.scalatest._
-import org.scalatest.Matchers._
+import matchers.should.Matchers._
 import com.twitter.util.{Await, Future}
+import org.scalatest.matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
-class PasswordSpec extends FlatSpec {
+class PasswordSpec extends AnyFlatSpec {
 
   it should "handle request" in {
     val password = GrantHandler.Password
