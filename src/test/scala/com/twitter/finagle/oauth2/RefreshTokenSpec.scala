@@ -1,11 +1,12 @@
 package com.twitter.finagle.oauth2
 
 import com.twitter.finagle.http.{HeaderMap, ParamMap}
-import org.scalatest.FlatSpec
-import org.scalatest.Matchers._
+import matchers.should.Matchers._
 import com.twitter.util.{Await, Future}
+import org.scalatest.matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
-class RefreshTokenSpec extends FlatSpec {
+class RefreshTokenSpec extends AnyFlatSpec {
 
   it should "handle request" in {
     val refreshToken = GrantHandler.RefreshToken
